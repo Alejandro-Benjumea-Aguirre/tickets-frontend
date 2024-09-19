@@ -12,8 +12,10 @@ export interface User {
 }
 
 export interface AuthContextType {
-  user: User | null; // `user` puede ser `null` si no hay usuario autenticado
-  logoutUser: () => void; // Función para cerrar sesión
+  user: User | null;
+  loginUser: (email: string, password: string) => Promise<void>;
+  registerUser: (user: User) => Promise<void>;
+  logoutUser: () => void;
 }
 
 export interface AuthProviderProps {
