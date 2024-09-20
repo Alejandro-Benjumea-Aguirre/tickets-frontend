@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../features/auth/AuthContext';
+import { Navbar } from '../layouts/Navbar';
 
 const Dashboard = () => {
   const authContext = useContext(AuthContext);
@@ -11,10 +12,9 @@ const Dashboard = () => {
   const { user, logoutUser } = authContext;
 
   return (
-    <div>
-      <h1>Bienvenido {user?.name || 'Usuario'}</h1>
-      <button onClick={logoutUser}>Cerrar Sesión</button>
-    </div>
+    <>
+      <Navbar user={user} logoutUser={logoutUser} />
+    </>
   );
 };
 

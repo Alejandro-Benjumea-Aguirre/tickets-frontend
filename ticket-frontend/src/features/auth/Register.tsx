@@ -125,9 +125,9 @@ const Register = () => {
             Rol:
           </label>
           <Select
-            options={optionsRoles} // Pasa las opciones
-            selectedValue={rol} // Pasa el valor seleccionado
-            onChange={handleSelectRol} // Manejador de cambio
+            options={optionsRoles}
+            selectedValue={rol}
+            onChange={handleSelectRol}
           />
         </div>
         <div>
@@ -136,9 +136,9 @@ const Register = () => {
             Departamento:
           </label>
           <Select
-            options={optionsDepartments} // Pasa las opciones
-            selectedValue={depatment} // Pasa el valor seleccionado
-            onChange={handleSelectDepartment} // Manejador de cambio
+            options={optionsDepartments}
+            selectedValue={depatment}
+            onChange={handleSelectDepartment}
           />
         </div>
         <div>
@@ -147,9 +147,9 @@ const Register = () => {
             Campo:
           </label>
           <Select
-            options={optionsCampus} // Pasa las opciones
-            selectedValue={campus} // Pasa el valor seleccionado
-            onChange={handleSelectCampus} // Manejador de cambio
+            options={optionsCampus}
+            selectedValue={campus}
+            onChange={handleSelectCampus}
           />
         </div>
         <div>

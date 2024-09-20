@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2'
+
 import { useState, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +17,12 @@ const Login = () => {
         await authContext.loginUser(email, password);
         navigate('/dashboard');
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.log('Error: ', error)
+        Swal.fire({
+          title: "¡Error!?",
+          text: "Se presento un error al momento de iniciar sesión.",
+          icon: "warning"
+        });
       }
     }
   };
