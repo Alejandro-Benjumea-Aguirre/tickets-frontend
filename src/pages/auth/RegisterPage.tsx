@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../../features/auth/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Select from '../../components/Select';
-import { getRoles } from '../../services/roles';
-import { getDepartments } from '../../services/departments';
-import { getCampus } from '../../services/campus';
+import Select from '../../components/ui/Select';
+import { getRoles } from '../../services/roles.service';
+import { getDepartments } from '../../services/departments.service';
+import { getCampus } from '../../services/campus.service';
 
-const Register = () => {
+const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -20,7 +20,6 @@ const Register = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // useEffect para obtener los datos de roles, departamentos y campus
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,18 +37,18 @@ const Register = () => {
     };
 
     fetchData();
-  }, []); // El array vacío asegura que el efecto solo se ejecute una vez al montar el componente
+  }, []);
 
-  const handleSelectRol = (value: number) => {
-    setRol(value);
+  const handleSelectRol = (value: string | number) => {
+    setRol(Number(value));
   };
 
-  const handleSelectDepartment = (value: number) => {
-    setDepartment(value);
+  const handleSelectDepartment = (value: string | number) => {
+    setDepartment(Number(value));
   };
 
-  const handleSelectCampus = (value: number) => {
-    setCampus(value);
+  const handleSelectCampus = (value: string | number) => {
+    setCampus(Number(value));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,8 +74,8 @@ const Register = () => {
           </label>
           <input
             type="text"
-            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200 
-                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200
+                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -89,8 +88,8 @@ const Register = () => {
           </label>
           <input
             type="text"
-            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200 
-                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200
+                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -103,8 +102,8 @@ const Register = () => {
           </label>
           <input
             type="email"
-            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200 
-                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200
+                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -116,9 +115,9 @@ const Register = () => {
             Rol:
           </label>
           <Select
-            options={optionsRoles} // Pasa las opciones
-            selectedValue={rol_id} // Pasa el valor seleccionado
-            onChange={handleSelectRol} // Manejador de cambio
+            options={optionsRoles}
+            selectedValue={rol_id}
+            onChange={handleSelectRol}
           />
         </div>
         <div>
@@ -126,9 +125,9 @@ const Register = () => {
             Departamento:
           </label>
           <Select
-            options={optionsDepartments} // Pasa las opciones
-            selectedValue={department_id} // Pasa el valor seleccionado
-            onChange={handleSelectDepartment} // Manejador de cambio
+            options={optionsDepartments}
+            selectedValue={department_id}
+            onChange={handleSelectDepartment}
           />
         </div>
         <div>
@@ -136,9 +135,9 @@ const Register = () => {
             Campo:
           </label>
           <Select
-            options={optionsCampus} // Pasa las opciones
-            selectedValue={campus_id} // Pasa el valor seleccionado
-            onChange={handleSelectCampus} // Manejador de cambio
+            options={optionsCampus}
+            selectedValue={campus_id}
+            onChange={handleSelectCampus}
           />
         </div>
         <div>
@@ -147,8 +146,8 @@ const Register = () => {
           </label>
           <input
             type="password"
-            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200 
-                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+            className="block w-full p-2 text-gray-900 border border-gray-400 rounded-lg bg-gray-50 text-xs focus:ring-blue-200
+                focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -156,9 +155,9 @@ const Register = () => {
           />
         </div>
         <div className='flex justify-center items-center'>
-          <button type="submit" 
-                  className="px-2 py-2 text-sm w-[180px] font-semibold text-center text-white bg-blue-700 rounded-lg 
-                  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 
+          <button type="submit"
+                  className="px-2 py-2 text-sm w-[180px] font-semibold text-center text-white bg-blue-700 rounded-lg
+                  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600
                   dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-2">
             Crear Usuario
           </button>
@@ -168,4 +167,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

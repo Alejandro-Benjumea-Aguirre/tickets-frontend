@@ -1,4 +1,4 @@
-import { User } from "./users";
+import { User } from "./users.types";
 
 export interface Option {
   value: string | number;

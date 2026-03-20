@@ -1,14 +1,12 @@
-import axios from 'axios';
-import { User } from '../interfaces/users';
-
-const URL = import.meta.env.VITE_APP_URL_API ? import.meta.env.VITE_APP_URL_API : 'http://localhost:3000/api';
+import api from '../../../config/api';
+import { User } from '../../../types/users.types';
 
 export const login = (username: string, password: string) => {
-  return axios.post(`${URL}/auth/login`, { username, password });
+  return api.post('/auth/login', { username, password });
 };
 
 export const register = (user: User) => {
-  return axios.post(`${URL}/users`, user);
+  return api.post('/users', user);
 };
 
 export const logout = () => {

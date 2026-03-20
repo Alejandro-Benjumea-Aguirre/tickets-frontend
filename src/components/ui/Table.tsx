@@ -1,4 +1,4 @@
-import { TableProps } from "../interfaces/components"
+import { TableProps } from "../../types/components.types";
 
 export const Table = ({titles, body}: TableProps) => {
   return (

@@ -1,24 +1,23 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './features/auth/AuthContext';
-import Login from './features/auth/Login';
-import Register from './features/auth/Register';
-import Dashboard from './pages/Dashboard';
-import PrivateRoute from './features/auth/PrivateRoute';
+import { AuthProvider } from './features/auth/context/AuthContext';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import DashboardPage from './pages/dashboard/DashboardPage';
+import PrivateRoute from './router/PrivateRoute';
 
 function App() {
-
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route
             path="/"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <DashboardPage />
               </PrivateRoute>
             }
           />

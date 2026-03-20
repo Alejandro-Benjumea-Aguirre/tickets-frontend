@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from '../pages/Dashboard';
+import DashboardPage from '../pages/dashboard/DashboardPage';
 
 export const DashboardRoutes = () => {
   return (
     <Routes>
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
     </Routes>
   );
 };

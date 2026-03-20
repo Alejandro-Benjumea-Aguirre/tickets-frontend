@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
-import { getCurrentUser, login, register, logout } from '../../services/authService';
-import { AuthProviderProps, AuthContextType, User } from '../../interfaces/users';
+import { getCurrentUser, login, register, logout } from '../services/authService';
+import { AuthProviderProps, AuthContextType, User } from '../../../types/users.types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
