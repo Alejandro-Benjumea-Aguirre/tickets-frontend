@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1D9E75"/>
+      <stop offset="100%" stop-color="#0F6E56"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="102" fill="url(#bg)"/>
+
+  <!-- Ticket shape (white) -->
+  <rect x="72" y="186" width="368" height="230" rx="26" fill="white" opacity="0.97"/>
+
+  <!-- Left notch -->
+  <circle cx="72" cy="301" r="33" fill="#1D9E75"/>
+  <!-- Right notch -->
+  <circle cx="440" cy="301" r="33" fill="#1D9E75"/>
+
+  <!-- Dashed vertical divider -->
+  <line x1="168" y1="200" x2="168" y2="402" stroke="#1D9E75" stroke-width="6" stroke-dasharray="12 9" opacity="0.45"/>
+
+  <!-- Stub left tint -->
+  <rect x="72" y="186" width="96" height="230" rx="26" fill="#E1F5EE" opacity="0.55"/>
+
+  <!-- Ticket info lines -->
+  <rect x="196" y="232" width="188" height="20" rx="10" fill="#1D9E75" opacity="0.85"/>
+  <rect x="196" y="264" width="138" height="16" rx="8" fill="#1D9E75" opacity="0.45"/>
+  <rect x="196" y="292" width="162" height="16" rx="8" fill="#1D9E75" opacity="0.35"/>
+  <rect x="196" y="320" width="110" height="14" rx="7" fill="#1D9E75" opacity="0.25"/>
+
+  <!-- Checkmark badge bottom-right -->
+  <circle cx="404" cy="388" r="52" fill="#085041"/>
+  <polyline points="378,388 398,408 432,372" fill="none" stroke="white" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

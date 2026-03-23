@@ -1,3 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Theme variables ─────────────────────────────────────────────────────── */
+
+:root {
+  --bg-page:       #f5f7f6;
+  --bg-card:       #ffffff;
+  --text-primary:  #1a1a1a;
+  --text-secondary:#888888;
+  --text-tertiary: #aaaaaa;
+  --border:        #e0e0e0;
+  --border-input:  #d8dad8;
+  --border-light:  #e8eae8;
+  --bg-input:      #ffffff;
+  --bg-filter:     #f9faf9;
+  --bg-toggle:     #f0f2f1;
+  --bg-active:     #ffffff;
+  --text-link:     #666666;
+}
+
+[data-theme="dark"] {
+  --bg-page:       #111318;
+  --bg-card:       #1e2128;
+  --text-primary:  #e8eaed;
+  --text-secondary:#9aa0a6;
+  --text-tertiary: #6b7280;
+  --border:        #2d3139;
+  --border-input:  #3c4049;
+  --border-light:  #2d3139;
+  --bg-input:      #292d36;
+  --bg-filter:     #1a1d23;
+  --bg-toggle:     #292d36;
+  --bg-active:     #2d3139;
+  --text-link:     #9aa0a6;
+}
+
+body {
+  background: var(--bg-page);
+  transition: background-color 0.2s ease;
+}
+
+/* Select options in dark mode */
+[data-theme="dark"] select option {
+  background: #1e2128;
+  color: #e8eaed;
+}

@@ -9,6 +9,9 @@ export interface User {
   department_id?: number
   campus_id?: number
   password: string
+  phone?: string
+  client?: string
+  created_at?: string
 }
 
 export interface AuthContextType {
@@ -16,6 +19,7 @@ export interface AuthContextType {
   loginUser: (username: string, password: string) => Promise<void>;
   registerUser: (user: User) => Promise<void>;
   logoutUser: () => void;
+  updateUser: (updates: { email?: string; phone?: string }) => void;
 }
 
 export interface AuthProviderProps {
