@@ -16,6 +16,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loginUser = async (username: string, password: string) => {
     const response = await login(username, password);
+    if (response.data.error) {
+      throw new Error(response.data.body);
+    }
     if (response.data.body) {
       localStorage.setItem("user", JSON.stringify(response.data.body));
       setUser(response.data.body);

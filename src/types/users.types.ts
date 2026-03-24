@@ -4,11 +4,11 @@ export interface User {
   username: string
   name: string
   email: string
-  rol_id: number
+  rol_id?: number
   state_id?: number
   department_id?: number
   campus_id?: number
-  password: string
+  password?: string
   phone?: string
   client?: string
   created_at?: string

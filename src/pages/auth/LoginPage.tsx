@@ -279,11 +279,13 @@ const LoginPage = () => {
     e.preventDefault();
     if (authContext && authContext.loginUser) {
       try {
-        await authContext.loginUser(username, password);
+        let response = await authContext.loginUser(username, password);
+        console.log(response)
         navigate('/dashboard');
       } catch (error) {
         console.log('Error: ', error);
-        Swal.fire({ title: '¡Error!', text: 'Se presentó un error al momento de iniciar sesión.', icon: 'warning' });
+        const message = error instanceof Error ? error.message : 'Se presentó un error al momento de iniciar sesión.';
+        Swal.fire({ title: '¡Error!', text: message, icon: 'warning' });
       }
     }
   };
