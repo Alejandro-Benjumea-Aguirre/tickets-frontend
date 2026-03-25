@@ -1,8 +1,8 @@
-import api from '../../../config/api';
+import { api } from '../../../config/api';
 import { User } from '../../../types/users.types';
 
-export const getUserEmail = (_username: string): { found: boolean; email: string | null } => {
-  return { found: false, email: null };
+export const getUsername = async (username: string) => {
+  return await api.get<User>(`/users/username/${username}`);
 };
 
 export const login = (username: string, password: string) => {

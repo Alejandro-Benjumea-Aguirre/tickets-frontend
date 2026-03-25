@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../features/auth/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getUserEmail } from '../../features/auth/services/authService';
+import { getUsername } from '../../features/auth/services/authService';
 
 // ── Password rules ─────────────────────────────────────────────────────────────
 
@@ -279,8 +279,7 @@ const LoginPage = () => {
     e.preventDefault();
     if (authContext && authContext.loginUser) {
       try {
-        let response = await authContext.loginUser(username, password);
-        console.log(response)
+        await authContext.loginUser(username, password);
         navigate('/dashboard');
       } catch (error) {
         console.log('Error: ', error);
@@ -290,7 +289,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleForgot = (e: React.MouseEvent) => {
+  const handleForgot = async (e: React.MouseEvent) => {
     e.preventDefault();
 
     if (!username.trim()) {
@@ -303,9 +302,11 @@ const LoginPage = () => {
       return;
     }
 
-    const result = getUserEmail(username.trim());
+    const result = await getUsername(username.trim());
 
-    if (!result.found) {
+    console.log(result)
+
+    if (!result.data.error) {
       Swal.fire({
         title: 'Usuario no encontrado',
         text: 'El usuario ingresado no existe en el sistema.',
@@ -315,7 +316,7 @@ const LoginPage = () => {
       return;
     }
 
-    if (!result.email) {
+    if (!result.data.body?.email) {
       Swal.fire({
         title: 'Sin correo válido',
         text: 'Este usuario no tiene un correo electrónico válido asociado para realizar la recuperación de contraseña. Contacta al administrador.',
@@ -327,7 +328,7 @@ const LoginPage = () => {
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     setSentCode(code);
-    setForgotEmail(result.email);
+    setForgotEmail(result.data.body.email);
     setNewPass('');
     setConfirmPass('');
     setForgotStep('code');
