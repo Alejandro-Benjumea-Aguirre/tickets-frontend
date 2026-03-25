@@ -1,16 +1,16 @@
 import { api } from '../../../config/api';
-import { User } from '../../../types/users.types';
+import { User } from '../../users/types/users.types';
 
 export const getUsername = async (username: string) => {
   return await api.get<User>(`/users/username/${username}`);
 };
 
-export const login = (username: string, password: string) => {
-  return api.post('/auth/login', { username, password });
+export const login = async (username: string, password: string) => {
+  return await api.post('/auth/login', { username, password });
 };
 
-export const register = (user: User) => {
-  return api.post('/users', user);
+export const register = async (user: User) => {
+  return await api.post('/users', user);
 };
 
 export const logout = () => {
