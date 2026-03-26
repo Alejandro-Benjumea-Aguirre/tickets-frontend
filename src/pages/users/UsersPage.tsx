@@ -1,51 +1,10 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { AuthContext } from '../../features/auth/context/AuthContext';
 import { Navbar } from '../../layouts/Navbar';
-
-// ── Types ──────────────────────────────────────────────────────────────────────
-
-interface MockUser {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  phone: string;
-  role: string;
-  rol_id: number;
-  client: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-}
-
-interface UserFilters {
-  name: string;
-  rol_id: string;
-  fechaDesde: string;
-  fechaHasta: string;
-  status: string;
-}
-
-interface CreateUserForm {
-  name: string;
-  client: string;
-  rol_id: string;
-  password: string;
-  email: string;
-  phone: string;
-}
+import { getUsers, setUser, updateUser, changeStatus } from '../../features/users/services/userService'
+import { User, UserFilters, CreateUserForm } from '../../features/users/types/users.types';
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
-
-const MOCK_USERS: MockUser[] = [
-  { id: 1, name: 'Carlos Ramírez',   username: 'cramirez',   email: 'carlos@empresa.com',  phone: '300 123 4567', role: 'Administrador', rol_id: 1, client: '—',              status: 'active',   createdAt: '2025-01-10' },
-  { id: 2, name: 'Laura Méndez',     username: 'lmendez',    email: 'laura@empresa.com',   phone: '300 987 6543', role: 'Agente',         rol_id: 2, client: '—',              status: 'active',   createdAt: '2025-02-14' },
-  { id: 3, name: 'Ana Torres',       username: 'atorres',    email: 'ana@empresa.com',     phone: '310 456 7890', role: 'Cliente',        rol_id: 3, client: 'Empresa ABC',    status: 'active',   createdAt: '2025-03-01' },
-  { id: 4, name: 'Juan Mesa',        username: 'jmesa',      email: 'juan@empresa.com',    phone: '315 234 5678', role: 'Cliente',        rol_id: 3, client: 'Tech Solutions', status: 'inactive', createdAt: '2025-03-05' },
-  { id: 5, name: 'Diego Fernández',  username: 'dfernandez', email: 'diego@empresa.com',   phone: '300 345 6789', role: 'Agente',         rol_id: 2, client: '—',              status: 'active',   createdAt: '2025-01-22' },
-  { id: 6, name: 'Paola Sánchez',    username: 'psanchez',   email: 'paola@empresa.com',   phone: '311 678 9012', role: 'Cliente',        rol_id: 3, client: 'Global Corp',    status: 'active',   createdAt: '2025-02-28' },
-  { id: 7, name: 'Andrés Herrera',   username: 'aherrera',   email: 'andres@empresa.com',  phone: '316 789 0123', role: 'Agente',         rol_id: 2, client: '—',              status: 'inactive', createdAt: '2025-01-30' },
-  { id: 8, name: 'Mónica Gil',       username: 'mgil',       email: 'monica@empresa.com',  phone: '318 901 2345', role: 'Cliente',        rol_id: 3, client: 'Constructora XY',status: 'active',   createdAt: '2025-03-10' },
-];
 
 const CLIENTES_OPTIONS = [
   { value: 'abc',  label: 'Empresa ABC' },
@@ -86,13 +45,13 @@ const roleColors: Record<number, { bg: string; color: string }> = {
 
 // ── Filter logic ──────────────────────────────────────────────────────────────
 
-function applyFilters(users: MockUser[], f: UserFilters): MockUser[] {
+function applyFilters(users: User[], f: UserFilters): User[] {
   return users.filter((u) => {
     if (f.name   && !u.name.toLowerCase().includes(f.name.toLowerCase())) return false;
     if (f.rol_id && String(u.rol_id) !== f.rol_id)                         return false;
     if (f.status && u.status !== f.status)                                  return false;
-    if (f.fechaDesde && u.createdAt < f.fechaDesde)                        return false;
-    if (f.fechaHasta && u.createdAt > f.fechaHasta)                        return false;
+    if (f.fechaDesde && u.created_at < f.fechaDesde)                        return false;
+    if (f.fechaHasta && u.created_at > f.fechaHasta)                        return false;
     return true;
   });
 }
@@ -299,7 +258,7 @@ interface EditUserForm {
 }
 
 interface EditUserModalProps {
-  user:    MockUser;
+  user:    User;
   onClose: () => void;
   onSave:  (id: number, form: EditUserForm) => void;
 }
@@ -308,8 +267,8 @@ const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => {
   const [form, setForm]     = useState<EditUserForm>({
     name:   user.name,
     email:  user.email,
-    phone:  user.phone === '—' ? '' : user.phone,
-    client: user.client === '—' ? '' : user.client,
+    phone:  user.phone ?? '',
+    client: user.client ?? '',
   });
   const [errors, setErrors] = useState<Partial<EditUserForm>>({});
   const overlayRef          = useRef<HTMLDivElement>(null);
@@ -340,7 +299,7 @@ const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => {
 
   const initials = user.name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
   const avatarBg = ({ 1: '#1D9E75', 2: '#378ADD', 3: '#7C5CBF' } as Record<number, string>)[user.rol_id] ?? '#888';
-  const formattedDate = new Date(user.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+  const formattedDate = new Date(user.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
 
   return (
     <div
@@ -358,7 +317,7 @@ const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => {
             </div>
             <div>
               <div style={ms.headerTitle}>Editar usuario</div>
-              <div style={ms.headerSub}>{user.username} · {user.role}</div>
+              <div style={ms.headerSub}>{user.username} · {user.rol}</div>
             </div>
           </div>
           <button style={ms.closeBtn} onClick={onClose}>
@@ -462,8 +421,22 @@ const UsersPage = () => {
   const authContext               = useContext(AuthContext);
   const [filters, setFilters]     = useState<UserFilters>(EMPTY_FILTERS);
   const [showModal, setShowModal] = useState(false);
-  const [users, setUsers]         = useState<MockUser[]>(MOCK_USERS);
-  const [editUser, setEditUser]   = useState<MockUser | null>(null);
+  const [users, setUsers]         = useState<User[]>([]);
+  const [editUser, setEditUser]   = useState<User | null>(null);
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  const fetchUsers = async (): Promise<void> => {
+    try {
+      const data = await getUsers()
+      console.log(data)
+      setUsers(data.data.body)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   if (!authContext) return <div>Error: AuthContext no está disponible</div>;
   const { user, logoutUser } = authContext;
@@ -475,42 +448,47 @@ const UsersPage = () => {
 
   const hasActiveFilters = Object.values(filters).some((v) => v !== '');
 
-  const handleToggleStatus = (id: number) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, status: u.status === 'active' ? 'inactive' : 'active' } : u
-      )
-    );
+  const handleToggleStatus = async (id: number, currentStatus: string | undefined) => {
+    const newStatusId = currentStatus === 'active' ? 2 : 1;
+    try {
+      await changeStatus(id, newStatusId);
+      await fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEditSave = (id: number, form: EditUserForm) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id
-          ? { ...u, name: form.name, email: form.email, phone: form.phone || '—', client: form.client || '—' }
-          : u
-      )
-    );
-    setEditUser(null);
+  const handleEditSave = async (id: number, form: EditUserForm) => {
+    try {
+      const target = users.find((u) => u.id === id);
+      if (!target) return;
+      await updateUser(id, { ...target, name: form.name, email: form.email, phone: form.phone, client: form.client });
+      await fetchUsers();
+      setEditUser(null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleSave = (form: CreateUserForm) => {
-    const roleLabel = ROLES_OPTIONS.find((r) => r.value === form.rol_id)?.label ?? '';
-    const clientLabel = CLIENTES_OPTIONS.find((c) => c.value === form.client)?.label ?? '—';
-    const newUser: MockUser = {
-      id:        users.length + 1,
-      name:      form.name,
-      username:  form.name.split(' ').map((w) => w[0]).join('').toLowerCase(),
-      email:     form.email,
-      phone:     form.phone || '—',
-      role:      roleLabel,
-      rol_id:    Number(form.rol_id),
-      client:    clientLabel,
-      status:    'active',
-      createdAt: new Date().toISOString().slice(0, 10),
-    };
-    setUsers((prev) => [newUser, ...prev]);
-    setShowModal(false);
+  const handleSave = async (form: CreateUserForm) => {
+    try {
+      const newUser: User = {
+        id:         0,
+        name:       form.name,
+        username:   form.name.split(' ').map((w) => w[0]).join('').toLowerCase(),
+        email:      form.email,
+        phone:      form.phone,
+        rol_id:     Number(form.rol_id),
+        client:     form.client,
+        password:   form.password,
+        created_at: new Date().toISOString().slice(0, 10),
+      };
+      await setUser(newUser);
+      await fetchUsers();
+      setShowModal(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const initials = (name: string) =>
@@ -674,7 +652,7 @@ const UsersPage = () => {
                       {/* Rol */}
                       <td style={s.td}>
                         <span style={{ ...s.rolBadge, background: roleColors[u.rol_id].bg, color: roleColors[u.rol_id].color }}>
-                          {u.role}
+                          {u.rol}
                         </span>
                       </td>
 
@@ -693,7 +671,7 @@ const UsersPage = () => {
 
                       {/* Creado */}
                       <td style={{ ...s.td, fontSize: 12, color: 'var(--text-tertiary)' }}>
-                        {new Date(u.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {new Date(u.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>
 
                       {/* Acciones */}
@@ -720,7 +698,7 @@ const UsersPage = () => {
                               ...(u.status === 'active' ? s.actionBtnDanger : s.actionBtnSuccess),
                             }}
                             title={u.status === 'active' ? 'Inactivar usuario' : 'Activar usuario'}
-                            onClick={() => handleToggleStatus(u.id)}
+                            onClick={() => handleToggleStatus(u.id, u.status)}
                           >
                             {u.status === 'active' ? (
                               <>
