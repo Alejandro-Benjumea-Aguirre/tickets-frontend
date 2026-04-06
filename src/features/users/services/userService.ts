@@ -17,8 +17,8 @@ export const updateUser = async (id: number, user: User) => {
   return await api.patch(`/users/${id}`, user);
 };
 
-export const changeStatus = async (id: number, status: number) => {
-  return await api.patch(`/users/status/${id}`, status);
+export const updateStatus = async (id: number, status: number) => {
+  return await api.patch(`/users/${id}/status`, status);
 };
 
 export const getCurrentUser = () => {
