@@ -1,7 +1,7 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { AuthContext } from '../../features/auth/context/AuthContext';
 import { Navbar } from '../../layouts/Navbar';
-import { getUsers, setUser, updateUser, changeStatus } from '../../features/users/services/userService'
+import { getUsers, setUser, updateUser, updateStatus } from '../../features/users/services/userService'
 import { User, UserFilters, CreateUserForm } from '../../features/users/types/users.types';
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
@@ -451,7 +451,7 @@ const UsersPage = () => {
   const handleToggleStatus = async (id: number, currentStatus: string | undefined) => {
     const newStatusId = currentStatus === 'active' ? 2 : 1;
     try {
-      await changeStatus(id, newStatusId);
+      await updateStatus(id, newStatusId);
       await fetchUsers();
     } catch (err) {
       console.error(err);

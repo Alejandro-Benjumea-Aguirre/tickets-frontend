@@ -22,7 +22,7 @@ const maskEmail = (email: string) => {
 // ── Demo accounts ──────────────────────────────────────────────────────────────
 
 const DEMO_ACCOUNTS = [
-  { label: 'Administrador', username: 'admin',   password: 'admin123',   color: '#1D9E75' },
+  { label: 'Administrador', username: 'admin',   password: 'Admin123!',   color: '#1D9E75' },
   { label: 'Agente',        username: 'agente',  password: 'agente123',  color: '#378ADD' },
   { label: 'Cliente',       username: 'cliente', password: 'cliente123', color: '#EF9F27' },
 ];

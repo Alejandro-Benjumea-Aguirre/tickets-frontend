@@ -3,7 +3,8 @@
     "allow": [
       "Bash(rm src/features/auth/AuthContext.tsx src/features/auth/Login.tsx src/features/auth/Register.tsx src/features/auth/PrivateRoute.tsx src/interfaces/users.ts src/interfaces/components.ts src/pages/Dashboard.tsx src/routes/index.tsx src/routes/DashboardRoutes.tsx src/routes/AdminRoutes.tsx src/components/Modal.tsx src/components/Pagination.tsx src/components/Select.tsx src/components/Table.tsx src/services/authService.ts src/services/campus.ts src/services/departments.ts src/services/roles.ts)",
       "Bash(rmdir src/interfaces src/routes)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
