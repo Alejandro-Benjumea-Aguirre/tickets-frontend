@@ -88,14 +88,6 @@ const CodeModal = ({ email, demoCode, onVerify, onClose }: CodeModalProps) => {
             </span>
           </div>
 
-          {/* Demo hint */}
-          <div style={ms.demoHint}>
-            <svg viewBox="0 0 24 24" width={12} height={12} fill="none" stroke="#8A6400" strokeWidth={2} style={{ flexShrink: 0 }}>
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-            <span>Demo — código simulado: <strong style={{ fontFamily: "'DM Mono', monospace", letterSpacing: '0.1em' }}>{demoCode}</strong></span>
-          </div>
-
           <div style={ms.field}>
             <label style={ms.label}>Código de verificación</label>
             <input
@@ -304,9 +296,7 @@ const LoginPage = () => {
 
     const result = await getUsername(username.trim());
 
-    console.log(result)
-
-    if (!result.data.error) {
+    if (result.data.error) {
       Swal.fire({
         title: 'Usuario no encontrado',
         text: 'El usuario ingresado no existe en el sistema.',
@@ -435,7 +425,7 @@ const LoginPage = () => {
                 />
                 Recordarme
               </label>
-              <a href="#" style={styles.forgot} onClick={handleForgot}>
+              <a href="javascript:void(0)" style={styles.forgot} onClick={handleForgot}>
                 ¿Olvidaste tu contraseña?
               </a>
             </div>

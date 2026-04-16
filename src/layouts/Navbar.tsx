@@ -4,6 +4,8 @@ import { NavbarProps } from '../types/components.types';
 import { useTheme } from '../features/theme/ThemeContext';
 import { AuthContext } from '../features/auth/context/AuthContext';
 import { User } from '../types/users.types';
+import { changePassword } from '../features/auth/services/authService';
+import Swal from 'sweetalert2';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -32,7 +34,7 @@ const ProfileModal = ({ user, onClose, onSave }: ProfileModalProps) => {
   const [phone, setPhone] = useState(user.phone ?? '');
   const [saving, setSaving] = useState(false);
 
-  const state = user.state_id ? STATE_LABEL[user.state_id] : undefined;
+  const state = user.status_id ? STATE_LABEL[user.status_id] : undefined;
 
   const handleSave = () => {
     setSaving(true);
@@ -206,6 +208,7 @@ const PASSWORD_RULES = [
 
 interface ChangePasswordModalProps {
   onClose: () => void;
+  userId: number;
 }
 
 const EyeIcon = ({ open }: { open: boolean }) =>
@@ -222,22 +225,35 @@ const EyeIcon = ({ open }: { open: boolean }) =>
     </svg>
   );
 
-const ChangePasswordModal = ({ onClose }: ChangePasswordModalProps) => {
+const ChangePasswordModal = ({ onClose, userId }: ChangePasswordModalProps) => {
   const [newPass,     setNewPass]     = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [showNew,     setShowNew]     = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted,   setSubmitted]   = useState(false);
+  const [saving,      setSaving]      = useState(false);
 
   const rulesPassed   = PASSWORD_RULES.every((r) => r.test(newPass));
   const passwordsMatch = newPass === confirmPass && confirmPass !== '';
   const canSave       = rulesPassed && passwordsMatch;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSubmitted(true);
     if (!canSave) return;
-    // TODO: llamar al endpoint de cambio de contraseña
-    onClose();
+    setSaving(true);
+    try {
+      const result = await changePassword(userId, newPass);
+      if (result.data.error) {
+        Swal.fire({ title: 'Error', text: String(result.data.body), icon: 'error', confirmButtonColor: '#1D9E75' });
+        return;
+      }
+      Swal.fire({ title: 'Contraseña actualizada', icon: 'success', confirmButtonColor: '#1D9E75', timer: 2000, showConfirmButton: false });
+      onClose();
+    } catch {
+      Swal.fire({ title: 'Error de conexión', text: 'No se pudo cambiar la contraseña. Intenta de nuevo.', icon: 'error', confirmButtonColor: '#1D9E75' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -338,8 +354,8 @@ const ChangePasswordModal = ({ onClose }: ChangePasswordModalProps) => {
         {/* Footer */}
         <div style={cp.footer}>
           <button style={cp.cancelBtn} onClick={onClose}>Cancelar</button>
-          <button style={cp.saveBtn} onClick={handleSave}>
-            Guardar contraseña
+          <button style={cp.saveBtn} onClick={handleSave} disabled={saving}>
+            {saving ? 'Guardando…' : 'Guardar contraseña'}
           </button>
         </div>
 
@@ -459,8 +475,8 @@ export const Navbar = ({ user, logoutUser }: NavbarProps) => {
         onSave={(updates) => authContext?.updateUser(updates)}
       />
     )}
-    {changePassOpen && (
-      <ChangePasswordModal onClose={() => setChangePassOpen(false)} />
+    {changePassOpen && user && (
+      <ChangePasswordModal onClose={() => setChangePassOpen(false)} userId={user.id} />
     )}
     <nav style={s.nav}>
       <div style={s.inner}>

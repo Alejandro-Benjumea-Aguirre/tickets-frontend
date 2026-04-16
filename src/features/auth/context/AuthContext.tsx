@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import { getCurrentUser, login, register, logout } from '../services/authService';
-import { AuthProviderProps, AuthContextType, User } from '../../user/types/users.types';
+import { AuthProviderProps, AuthContextType, User } from '../../users/types/users.types';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const loginUser = async (username: string, password: string) => {
     const response = await login(username, password);
     if (response.data.error) {
-      throw new Error(response.data.body);
+      throw new Error(String(response.data.body));
     }
     if (response.data.body) {
       localStorage.setItem("user", JSON.stringify(response.data.body));

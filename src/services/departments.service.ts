@@ -1,4 +1,5 @@
 import { api } from '../config/api'
+import { Departments } from '../types/departments.types'
 
 export const getDepartments = () => {
   return api.get('/departments')

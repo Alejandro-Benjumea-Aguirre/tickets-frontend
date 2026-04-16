@@ -17,6 +17,6 @@ export interface NavbarProps {
 }
 
 export interface TableProps {
-  titles: [],
-  body: []
+  titles: unknown[],
+  body: unknown[]
 }

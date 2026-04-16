@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback, useContext } from 'react';
 import SearchableSelect from '../../../components/ui/SearchableSelect';
 import { AuthContext } from '../../auth/context/AuthContext';
+import { setTicket } from '../services/ticketService';
+import Swal from 'sweetalert2';
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
@@ -107,6 +109,7 @@ const CreateTicketModal = ({ onClose }: CreateTicketModalProps) => {
   const [files,        setFiles]       = useState<FileItem[]>([]);
   const [dragging,     setDragging]    = useState(false);
 
+  const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const setSuceso = (index: number, value: string) =>
@@ -151,11 +154,38 @@ const CreateTicketModal = ({ onClose }: CreateTicketModalProps) => {
 
   // ── Submit ──────────────────────────────────────────────────────────────────
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: conectar con el endpoint de creación de tickets
-    console.log({ asunto, descripcion, prioridad, sucesos, cliente, responsable, files: files.map((f) => f.file.name) });
-    onClose();
+    setSubmitting(true);
+    try {
+      const payload: Parameters<typeof setTicket>[0] = {
+        asunto,
+        descripcion,
+        prio: prioridad,
+        estado: 'open',
+        cliente,
+        agente: responsable,
+        agColor: '#888',
+        fechaCreacion: '',
+        fechaActualizacion: '',
+        enEspera: false,
+        categoria: sucesos[1] ?? '',
+        canal: sucesos[3] ?? '',
+        comments: [],
+        files: [],
+      };
+      const result = await setTicket(payload);
+      if (result.data.error) {
+        Swal.fire({ title: 'Error', text: String(result.data.body), icon: 'error', confirmButtonColor: '#1D9E75' });
+        return;
+      }
+      Swal.fire({ title: 'Ticket creado', icon: 'success', confirmButtonColor: '#1D9E75', timer: 2000, showConfirmButton: false });
+      onClose();
+    } catch {
+      Swal.fire({ title: 'Error de conexión', text: 'No se pudo crear el ticket. Intenta de nuevo.', icon: 'error', confirmButtonColor: '#1D9E75' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -354,11 +384,13 @@ const CreateTicketModal = ({ onClose }: CreateTicketModalProps) => {
           {/* Footer */}
           <div style={s.footer}>
             <button type="button" style={s.cancelBtn} onClick={onClose}>Cancelar</button>
-            <button type="submit" style={s.submitBtn}>
-              <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth={2.5}>
-                <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Crear ticket
+            <button type="submit" style={s.submitBtn} disabled={submitting}>
+              {!submitting && (
+                <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              )}
+              {submitting ? 'Creando…' : 'Crear ticket'}
             </button>
           </div>
         </form>

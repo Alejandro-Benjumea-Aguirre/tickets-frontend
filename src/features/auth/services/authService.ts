@@ -13,6 +13,10 @@ export const register = async (user: User) => {
   return await api.post('/users', user);
 };
 
+export const changePassword = async (userId: number, password: string) => {
+  return await api.patch(`/users/${userId}/password`, { password });
+};
+
 export const logout = () => {
   localStorage.removeItem("user");
 };

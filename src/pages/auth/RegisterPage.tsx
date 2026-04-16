@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Select from '../../components/ui/Select';
 import { getRoles } from '../../services/roles.service';
 import { getDepartments } from '../../services/departments.service';
-import { getCampus } from '../../services/campus.service';
+import { getAllCampus } from '../../services/campus.service';
+import { Option } from '../../types/components.types';
+import Swal from 'sweetalert2';
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +16,9 @@ const RegisterPage = () => {
   const [rol_id, setRol] = useState<number>(0);
   const [department_id, setDepartment] = useState<number>(0);
   const [campus_id, setCampus] = useState<number>(0);
-  const [optionsRoles, setOptionsRoles] = useState([]);
-  const [optionsDepartments, setOptionsDepartments] = useState([]);
-  const [optionsCampus, setOptionsCampus] = useState([]);
+  const [optionsRoles, setOptionsRoles] = useState<Option[]>([]);
+  const [optionsDepartments, setOptionsDepartments] = useState<Option[]>([]);
+  const [optionsCampus, setOptionsCampus] = useState<Option[]>([]);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -24,15 +26,15 @@ const RegisterPage = () => {
     const fetchData = async () => {
       try {
         const responseRoles = await getRoles();
-        setOptionsRoles(responseRoles.data);
+        setOptionsRoles((responseRoles.data.body ?? []).map((r) => ({ value: r.id, label: r.name })));
 
         const responseDepartments = await getDepartments();
-        setOptionsDepartments(responseDepartments.data);
+        setOptionsDepartments((responseDepartments.data.body ?? []).map((d) => ({ value: d.id, label: d.name })));
 
-        const responseCampus = await getCampus();
-        setOptionsCampus(responseCampus.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+        const responseCampus = await getAllCampus();
+        setOptionsCampus((responseCampus.data.body ?? []).map((c) => ({ value: c.id, label: c.name })));
+      } catch {
+        Swal.fire({ title: 'Error', text: 'No se pudieron cargar los datos del formulario.', icon: 'error', confirmButtonColor: '#1D9E75' });
       }
     };
 
@@ -58,8 +60,8 @@ const RegisterPage = () => {
       try {
         await authContext.registerUser({ email, password, name, username, rol_id, department_id, campus_id });
         navigate('/login');
-      } catch (error) {
-        console.error('Error al registrar:', error);
+      } catch {
+        Swal.fire({ title: 'Error', text: 'No se pudo crear el usuario. Intenta de nuevo.', icon: 'error', confirmButtonColor: '#1D9E75' });
       }
     }
   };

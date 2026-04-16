@@ -3,6 +3,7 @@ import { AuthContext } from '../../features/auth/context/AuthContext';
 import { Navbar } from '../../layouts/Navbar';
 import { getUsers, setUser, updateUser, updateStatus } from '../../features/users/services/userService'
 import { User, UserFilters, CreateUserForm } from '../../features/users/types/users.types';
+import Swal from 'sweetalert2';
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
 
@@ -392,7 +393,7 @@ const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => {
               >
                 <option value="">Sin cliente asignado</option>
                 {CLIENTES_OPTIONS.map((c) => (
-                  <option key={c.value} value={c.label}>{c.label}</option>
+                  <option key={c.value} value={c.value}>{c.label}</option>
                 ))}
               </select>
             </div>
@@ -424,19 +425,18 @@ const UsersPage = () => {
   const [users, setUsers]         = useState<User[]>([]);
   const [editUser, setEditUser]   = useState<User | null>(null);
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
   const fetchUsers = async (): Promise<void> => {
     try {
       const data = await getUsers()
-      console.log(data)
       setUsers(data.data.body)
-    } catch (err) {
-      console.error(err)
+    } catch {
+      Swal.fire({ title: 'Error', text: 'No se pudieron cargar los usuarios.', icon: 'error', confirmButtonColor: '#1D9E75' });
     }
   }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   if (!authContext) return <div>Error: AuthContext no está disponible</div>;
   const { user, logoutUser } = authContext;
@@ -453,8 +453,8 @@ const UsersPage = () => {
     try {
       await updateStatus(id, newStatusId);
       await fetchUsers();
-    } catch (err) {
-      console.error(err);
+    } catch {
+      Swal.fire({ title: 'Error', text: 'No se pudo cambiar el estado del usuario.', icon: 'error', confirmButtonColor: '#1D9E75' });
     }
   };
 
@@ -465,8 +465,8 @@ const UsersPage = () => {
       await updateUser(id, { ...target, name: form.name, email: form.email, phone: form.phone, client: form.client });
       await fetchUsers();
       setEditUser(null);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      Swal.fire({ title: 'Error', text: 'No se pudo guardar los cambios.', icon: 'error', confirmButtonColor: '#1D9E75' });
     }
   };
 
@@ -486,8 +486,8 @@ const UsersPage = () => {
       await setUser(newUser);
       await fetchUsers();
       setShowModal(false);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      Swal.fire({ title: 'Error', text: 'No se pudo crear el usuario.', icon: 'error', confirmButtonColor: '#1D9E75' });
     }
   };
 
@@ -651,7 +651,7 @@ const UsersPage = () => {
 
                       {/* Rol */}
                       <td style={s.td}>
-                        <span style={{ ...s.rolBadge, background: roleColors[u.rol_id].bg, color: roleColors[u.rol_id].color }}>
+                        <span style={{ ...s.rolBadge, background: roleColors[u.rol_id]?.bg ?? '#EEE', color: roleColors[u.rol_id]?.color ?? '#666' }}>
                           {u.rol}
                         </span>
                       </td>

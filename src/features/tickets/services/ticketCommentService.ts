@@ -18,5 +18,5 @@ export const updateComment = async (id: number, comment: TicketComment) => {
 }
 
 export const updateStatus = async (id: number, status: number) => {
-  return await api.patch(`/comments/${id}/status`, status)
+  return await api.patch(`/comments/${id}/status`, { status })
 }
