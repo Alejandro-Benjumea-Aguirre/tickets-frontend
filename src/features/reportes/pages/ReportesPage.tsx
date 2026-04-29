@@ -1,6 +1,6 @@
 import { useState, useContext, useRef, useEffect } from 'react';
-import { AuthContext } from '../../features/auth/context/AuthContext';
-import { Navbar } from '../../layouts/Navbar';
+import { AuthContext } from '../../auth/context/AuthContext';
+import { Navbar } from '../../../layouts/Navbar';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 

@@ -1,8 +1,8 @@
 import { useState, useContext, useRef, useEffect } from 'react';
-import { AuthContext } from '../../features/auth/context/AuthContext';
-import { Navbar } from '../../layouts/Navbar';
-import { getUsers, setUser, updateUser, updateStatus } from '../../features/users/services/userService'
-import { User, UserFilters, CreateUserForm } from '../../features/users/types/users.types';
+import { AuthContext } from '../../auth/context/AuthContext';
+import { Navbar } from '../../../layouts/Navbar';
+import { getUsers, setUser, updateUser, updateStatus } from '../services/userService'
+import { User, UserFilters, CreateUserForm } from '../types/users.types';
 import Swal from 'sweetalert2';
 
 // ── Mock data ──────────────────────────────────────────────────────────────────

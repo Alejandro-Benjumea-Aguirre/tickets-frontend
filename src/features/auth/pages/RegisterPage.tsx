@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../features/auth/context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Select from '../../components/ui/Select';
-import { getRoles } from '../../services/roles.service';
-import { getDepartments } from '../../services/departments.service';
-import { getAllCampus } from '../../services/campus.service';
-import { Option } from '../../types/components.types';
+import Select from '../../../components/ui/Select';
+import { getRoles } from '../../../services/roles.service';
+import { getDepartments } from '../../../services/departments.service';
+import { getAllCampus } from '../../../services/campus.service';
+import { Option } from '../../../types/components.types';
 import Swal from 'sweetalert2';
 
 const RegisterPage = () => {

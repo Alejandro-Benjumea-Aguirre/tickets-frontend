@@ -1,8 +1,8 @@
 import { useState, useContext, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../features/auth/context/AuthContext';
-import { Navbar } from '../../layouts/Navbar';
-import { TICKETS_DETAIL, TicketComment, TicketFile } from '../../features/tickets/types/tickets.types';
+import { AuthContext } from '../../auth/context/AuthContext';
+import { Navbar } from '../../../layouts/Navbar';
+import { TICKETS_DETAIL, TicketComment, TicketFile } from '../types/tickets.types';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 

@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider } from './features/auth/context/AuthContext';
 import { ThemeProvider } from './features/theme/ThemeContext';
-import LoginPage from './pages/auth/LoginPage';
-import RegisterPage from './pages/auth/RegisterPage';
-import DashboardPage from './pages/dashboard/DashboardPage';
-import UsersPage from './pages/users/UsersPage';
-import ClientsPage from './pages/clients/ClientsPage';
-import SucesosPage from './pages/sucesos/SucesosPage';
-import ReportesPage from './pages/reportes/ReportesPage';
-import EstadisticasPage from './pages/estadisticas/EstadisticasPage';
-import TicketDetailPage from './pages/tickets/TicketDetailPage';
+import LoginPage from './features/auth/pages/LoginPage';
+import RegisterPage from './features/auth/pages/RegisterPage';
+import DashboardPage from './features/dashboard/pages/DashboardPage';
+import UsersPage from './features/users/pages/UsersPage';
+import ClientsPage from './features/clients/pages/ClientsPage';
+import SucesosPage from './features/sucesos/pages/SucesosPage';
+import ReportesPage from './features/reportes/pages/ReportesPage';
+import EstadisticasPage from './features/estadisticas/pages/EstadisticasPage';
+import TicketDetailPage from './features/tickets/pages/TicketDetailPage';
 import PrivateRoute from './router/PrivateRoute';
 
 function App() {

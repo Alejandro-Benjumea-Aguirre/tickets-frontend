@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
-import CreateTicketModal from '../../features/tickets/components/CreateTicketModal';
-import { TicketsTable, type TicketRow } from '../../features/tickets/components/TicketsTable';
-import { AuthContext } from '../../features/auth/context/AuthContext';
-import { Navbar } from '../../layouts/Navbar';
+import CreateTicketModal from '../../tickets/components/CreateTicketModal';
+import { TicketsTable, type TicketRow } from '../../tickets/components/TicketsTable';
+import { AuthContext } from '../../auth/context/AuthContext';
+import { Navbar } from '../../../layouts/Navbar';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 

@@ -282,3 +282,23 @@ export const TICKETS_DETAIL: Record<string, TicketDetail> = {
     files: [],
   },
 };
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface FileItem {
+  id: string;
+  file: File;
+  preview?: string;
+  error?: string;
+}
+
+export interface FileListProps {
+  files: FileItem[];
+  onRemove: (id: string) => void;
+  formatSize: (bytes: number) => string;
+  s: Record<string, React.CSSProperties>; // Pasamos los estilos
+}
+
+export interface CreateTicketModalProps {
+  onClose: () => void;
+}

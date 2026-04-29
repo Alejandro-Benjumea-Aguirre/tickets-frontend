@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
-import CreateTicketModal from '../../features/tickets/components/CreateTicketModal';
-import { TicketsTable, type TicketRow } from '../../features/tickets/components/TicketsTable';
+import CreateTicketModal from '../../tickets/components/CreateTicketModal';
+import { TicketsTable, type TicketRow } from '../../tickets/components/TicketsTable';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,8 +12,8 @@ import {
   Tooltip,
 } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
-import { AuthContext } from '../../features/auth/context/AuthContext';
-import { Navbar } from '../../layouts/Navbar';
+import { AuthContext } from '../../auth/context/AuthContext';
+import { Navbar } from '../../../layouts/Navbar';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Filler, Tooltip);
 

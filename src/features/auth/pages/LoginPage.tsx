@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
 import { useState, useContext } from 'react';
-import { AuthContext } from '../../features/auth/context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getUsername } from '../../features/auth/services/authService';
+import { getUsername } from '../services/authService';
 
 // ── Password rules ─────────────────────────────────────────────────────────────
 
