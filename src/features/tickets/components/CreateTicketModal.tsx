@@ -3,7 +3,7 @@ import SearchableSelect from '../../../components/ui/SearchableSelect';
 import { AuthContext } from '../../auth/context/AuthContext';
 import { useCreateTicket } from '../hooks/useCreateTicket';
 import { setTicket } from '../services/ticketService';
-import { CreateTicketModalProps, FileListProps, FileItem } from '../types/tickets.types';
+import { CreateTicketModalProps } from '../types/tickets.types';
 import { CLIENTES, USUARIOS, SUCESOS, MAX_SIZE_MB } from '../data/ticketConstants';
 import { s } from '../styles/CreateTicketsModal.style';
 import Swal from 'sweetalert2';
@@ -18,7 +18,7 @@ const CreateTicketModal = ({ onClose }: CreateTicketModalProps) => {
   const { 
     form, files, submitting, setSubmitting, 
     handleChange, handleSucesoChange, processFiles, setFiles 
-  } = useCreateTicket(onClose);
+  } = useCreateTicket();
 
   const removeFile = (id: string) => {
     setFiles((prev) => {
@@ -55,8 +55,8 @@ const CreateTicketModal = ({ onClose }: CreateTicketModalProps) => {
       
       Swal.fire({ title: 'Ticket creado', icon: 'success', timer: 2000, showConfirmButton: false });
       onClose();
-    } catch (err: any) {
-      Swal.fire({ title: 'Error', text: err.message, icon: 'error' });
+    } catch (err) {
+      Swal.fire({ title: 'Error', text: err instanceof Error ? err.message : String(err), icon: 'error' });
     } finally {
       setSubmitting(false);
     }

@@ -130,6 +130,30 @@ const TicketDetailPage = () => {
     commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [comments]);
 
+  // ── File handlers (hooks must be before any early return) ────────────────────
+
+  const addTicketFiles = useCallback((rawFiles: FileList | File[]) => {
+    const entries: TicketFile[] = Array.from(rawFiles).map((f) => ({
+      id:     `f${Date.now()}-${f.name}`,
+      nombre: f.name,
+      tipo:   guessFileType(f.name),
+      tamaño: fileSizeLabel(f.size),
+      fecha:  nowDateOnly(),
+    }));
+    setFiles((prev) => [...prev, ...entries]);
+  }, []);
+
+  const addCommentFiles = useCallback((rawFiles: FileList | File[]) => {
+    const entries: TicketFile[] = Array.from(rawFiles).map((f) => ({
+      id:     `cf${Date.now()}-${f.name}`,
+      nombre: f.name,
+      tipo:   guessFileType(f.name),
+      tamaño: fileSizeLabel(f.size),
+      fecha:  nowDateOnly(),
+    }));
+    setCommentFiles((prev) => [...prev, ...entries]);
+  }, []);
+
   if (!authContext) return null;
   const { user, logoutUser } = authContext;
 
@@ -177,32 +201,8 @@ const TicketDetailPage = () => {
     setCommentFiles([]);
   };
 
-  // Ticket-level file handlers
-  const addTicketFiles = useCallback((rawFiles: FileList | File[]) => {
-    const entries: TicketFile[] = Array.from(rawFiles).map((f) => ({
-      id:     `f${Date.now()}-${f.name}`,
-      nombre: f.name,
-      tipo:   guessFileType(f.name),
-      tamaño: fileSizeLabel(f.size),
-      fecha:  nowDateOnly(),
-    }));
-    setFiles((prev) => [...prev, ...entries]);
-  }, []);
-
   const removeTicketFile = (fileId: string) =>
     setFiles((prev) => prev.filter((f) => f.id !== fileId));
-
-  // Comment-level file handlers
-  const addCommentFiles = useCallback((rawFiles: FileList | File[]) => {
-    const entries: TicketFile[] = Array.from(rawFiles).map((f) => ({
-      id:     `cf${Date.now()}-${f.name}`,
-      nombre: f.name,
-      tipo:   guessFileType(f.name),
-      tamaño: fileSizeLabel(f.size),
-      fecha:  nowDateOnly(),
-    }));
-    setCommentFiles((prev) => [...prev, ...entries]);
-  }, []);
 
   const removeCommentFile = (fileId: string) =>
     setCommentFiles((prev) => prev.filter((f) => f.id !== fileId));
