@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { MAX_SIZE_MB, ACCEPTED } from '../data/ticketConstants';
 import { FileItem } from '../types/tickets.types';
 
-export const useCreateTicket = (onSuccess: () => void) => {
+export const useCreateTicket = () => {
     const [form, setForm] = useState({
         asunto: '',
         descripcion: '',
@@ -16,7 +16,7 @@ export const useCreateTicket = (onSuccess: () => void) => {
     const [files, setFiles] = useState<FileItem[]>([]);
     const [submitting, setSubmitting] = useState(false);
 
-    const handleChange = (field: string, value: any) => {
+    const handleChange = (field: string, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
     };
 

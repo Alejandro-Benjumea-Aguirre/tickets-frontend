@@ -12,7 +12,6 @@ interface UserFilters     { name: string; rol: string; status: string; }
 interface ClientFilters   { name: string; engineer: string; status: string; }
 interface SucesoFilters   { name: string; level: string; }
 
-type ReportFilters = TicketFilters | UserFilters | ClientFilters | SucesoFilters;
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
 

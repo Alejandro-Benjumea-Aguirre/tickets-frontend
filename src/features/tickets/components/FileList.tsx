@@ -1,4 +1,4 @@
-import { FileItem, FileListProps } from '../types/tickets.types';
+import { FileListProps } from '../types/tickets.types';
 
 const FileList = ({ files, onRemove, formatSize, s }: FileListProps) => {
   return (
