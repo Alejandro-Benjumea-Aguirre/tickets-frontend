@@ -5,13 +5,11 @@ import { s } from '../styles/ClientsPage.style';
 
 // Hooks y Utils
 import { useClients } from '../hooks/useClients';
-import { getInitials, getAvatarBg, formatDateCO } from '../utils/clientUtils';
+import { getInitials, getAvatarBg } from '../utils/clientUtils';
 
 // Componentes
 import { CreateClientModal } from '../components/CreateClientModal';
 import { EditClientModal } from '../components/EditClientModal';
-import { ClientFilterBar } from '../components/ClientFilterBar'; // Podrías extraer los filtros aquí
-import { ClientTable } from '../components/ClientTable';         // Y la tabla aquí
 
 
 // ── Clients Page ──────────────────────────────────────────────────────────────
@@ -174,7 +172,7 @@ const ClientsPage = () => {
             <div style={{ ...s.filterField, justifyContent: 'flex-end' }}>
               <label style={{ ...s.filterLabel, visibility: 'hidden' }}>·</label>
               {hasActiveFilters ? (
-                <button style={s.clearBtn} onClick={() => setFilter(EMPTY_FILTERS)}>
+                <button style={s.clearBtn} onClick={clearFilters}>
                   <svg viewBox="0 0 24 24" width={12} height={12} fill="none" stroke="currentColor" strokeWidth={2.5}>
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
@@ -193,7 +191,7 @@ const ClientsPage = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={s.tableTitle}>Lista de clientes</span>
               <span style={s.countBadge}>
-                {filtered.length} {filtered.length === 1 ? 'cliente' : 'clientes'}
+                {clients.length} {clients.length === 1 ? 'cliente' : 'clientes'}
               </span>
             </div>
           </div>
@@ -208,7 +206,7 @@ const ClientsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {filtered.length === 0 ? (
+                {clients.length === 0 ? (
                   <tr>
                     <td colSpan={7} style={{ ...s.td, textAlign: 'center', color: 'var(--text-tertiary)', padding: '3rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -221,7 +219,7 @@ const ClientsPage = () => {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((c) => (
+                  clients.map((c) => (
                     <tr key={c.id} style={s.tr}
                       onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-filter)')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
@@ -230,8 +228,8 @@ const ClientsPage = () => {
                       {/* Cliente */}
                       <td style={s.td}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ ...s.avatar, background: avatarBg(c.name) }}>
-                            {initials(c.name)}
+                          <div style={{ ...s.avatar, background: getAvatarBg(c.name) }}>
+                            {getInitials(c.name)}
                           </div>
                           <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
                             {c.name}
@@ -263,7 +261,7 @@ const ClientsPage = () => {
                       {/* Ingeniero */}
                       <td style={s.td}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                          <div style={s.engineerAv}>{initials(c.engineer === '—' ? '?' : c.engineer)}</div>
+                          <div style={s.engineerAv}>{getInitials(c.engineer === '—' ? '?' : c.engineer)}</div>
                           <span style={{ fontSize: 13, color: 'var(--text-primary)' }}>{c.engineer}</span>
                         </div>
                       </td>
