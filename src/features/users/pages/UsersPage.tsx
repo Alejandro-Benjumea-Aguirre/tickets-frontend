@@ -3,7 +3,10 @@ import { AuthContext } from '../../auth/context/AuthContext';
 import { Navbar } from '../../../layouts/Navbar';
 import { getUsers, setUser, updateUser, updateStatus } from '../services/userService'
 import { User, UserFilters, CreateUserForm } from '../types/users.types';
+import { MOCK_USERS } from '../data/usersConstant';
 import Swal from 'sweetalert2';
+
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
 
@@ -426,9 +429,13 @@ const UsersPage = () => {
   const [editUser, setEditUser]   = useState<User | null>(null);
 
   const fetchUsers = async (): Promise<void> => {
+    if (USE_MOCK) {
+      setUsers(MOCK_USERS);
+      return;
+    }
     try {
-      const data = await getUsers()
-      setUsers(data.data.body)
+      const data = await getUsers();
+      setUsers(data.data.body ?? []);
     } catch {
       Swal.fire({ title: 'Error', text: 'No se pudieron cargar los usuarios.', icon: 'error', confirmButtonColor: '#1D9E75' });
     }
@@ -449,6 +456,10 @@ const UsersPage = () => {
   const hasActiveFilters = Object.values(filters).some((v) => v !== '');
 
   const handleToggleStatus = async (id: number, currentStatus: string | undefined) => {
+    if (USE_MOCK) {
+      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status: currentStatus === 'active' ? 'inactive' : 'active' } : u));
+      return;
+    }
     const newStatusId = currentStatus === 'active' ? 2 : 1;
     try {
       await updateStatus(id, newStatusId);
@@ -459,6 +470,11 @@ const UsersPage = () => {
   };
 
   const handleEditSave = async (id: number, form: EditUserForm) => {
+    if (USE_MOCK) {
+      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, ...form } : u));
+      setEditUser(null);
+      return;
+    }
     try {
       const target = users.find((u) => u.id === id);
       if (!target) return;
@@ -471,18 +487,25 @@ const UsersPage = () => {
   };
 
   const handleSave = async (form: CreateUserForm) => {
+    const newUser: User = {
+      id:         USE_MOCK ? (users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1) : 0,
+      name:       form.name,
+      username:   form.name.split(' ').map((w) => w[0]).join('').toLowerCase(),
+      email:      form.email,
+      phone:      form.phone,
+      rol_id:     Number(form.rol_id),
+      rol:        ({ '1': 'Administrador', '2': 'Agente', '3': 'Cliente' } as Record<string, string>)[form.rol_id] ?? '',
+      client:     form.client,
+      password:   form.password,
+      status:     'active',
+      created_at: new Date().toISOString().slice(0, 10),
+    };
+    if (USE_MOCK) {
+      setUsers((prev) => [newUser, ...prev]);
+      setShowModal(false);
+      return;
+    }
     try {
-      const newUser: User = {
-        id:         0,
-        name:       form.name,
-        username:   form.name.split(' ').map((w) => w[0]).join('').toLowerCase(),
-        email:      form.email,
-        phone:      form.phone,
-        rol_id:     Number(form.rol_id),
-        client:     form.client,
-        password:   form.password,
-        created_at: new Date().toISOString().slice(0, 10),
-      };
       await setUser(newUser);
       await fetchUsers();
       setShowModal(false);
