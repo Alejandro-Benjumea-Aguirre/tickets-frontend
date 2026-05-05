@@ -92,36 +92,93 @@ Esta aplicación frontend sirve como interfaz de usuario para un sistema de tick
 
 ## Estructura del proyecto
 
+La arquitectura sigue un patrón **feature-based**: cada módulo de negocio vive en `features/<modulo>/` y contiene todas sus capas internas (páginas, componentes, servicios, tipos, estilos, etc.). Los recursos verdaderamente compartidos se ubican en directorios de nivel superior.
+
 ```
 src/
+├── components/
+│   └── ui/                         # Componentes UI reutilizables
+│       ├── Modal.tsx
+│       ├── Pagination.tsx
+│       ├── SearchableSelect.tsx
+│       ├── Select.tsx
+│       ├── Table.tsx
+│       └── index.ts
+│
+├── config/
+│   └── api.ts                      # Configuración base de Axios
+│
 ├── features/
 │   ├── auth/
-│   │   ├── context/        # AuthContext — estado global de autenticación
-│   │   └── services/       # authService — lógica de login simulada
-│   ├── theme/              # Contexto de tema (modo claro/oscuro)
-│   └── tickets/
-│       └── data/           # ticketsData.ts — datos mock compartidos de tickets
+│   │   ├── context/                # AuthContext — estado global de autenticación
+│   │   ├── pages/                  # LoginPage, RegisterPage
+│   │   ├── services/               # authService — lógica de autenticación
+│   │   └── index.ts
+│   ├── clients/
+│   │   ├── components/             # CreateClientModal, EditClientModal
+│   │   ├── data/                   # Constantes y datos del módulo
+│   │   ├── hooks/                  # useClients
+│   │   ├── pages/                  # ClientsPage
+│   │   ├── styles/                 # Estilos CSS-in-JS del módulo
+│   │   ├── types/                  # clients.types.ts
+│   │   └── utils/                  # clientUtils
+│   ├── dashboard/
+│   │   └── pages/                  # DashboardPage, AdminDashboardPage, AgentDashboardPage, ClientDashboardPage
+│   ├── estadisticas/
+│   │   └── pages/                  # EstadisticasPage
+│   ├── reportes/
+│   │   └── pages/                  # ReportesPage
+│   ├── sucesos/
+│   │   ├── components/             # CreateSucesoModal
+│   │   ├── data/                   # Constantes del módulo
+│   │   ├── pages/                  # SucesosPage
+│   │   ├── styles/                 # Estilos CSS-in-JS del módulo
+│   │   └── types/                  # sucesos.types.ts
+│   ├── theme/
+│   │   └── ThemeContext.tsx        # Contexto de tema (modo claro/oscuro)
+│   ├── tickets/
+│   │   ├── components/             # CreateTicketModal, TicketsTable, TicketDropZone, FileList
+│   │   ├── data/                   # ticketConstants
+│   │   ├── hooks/                  # useCreateTicket
+│   │   ├── pages/                  # TicketDetailPage
+│   │   ├── services/               # ticketService, ticketCommentService
+│   │   ├── styles/                 # Estilos CSS-in-JS del módulo
+│   │   └── types/                  # tickets.types.ts
+│   └── users/
+│       ├── pages/                  # UsersPage
+│       ├── services/               # userService
+│       └── types/                  # users.types.ts
 │
 ├── layouts/
-│   └── Navbar.tsx          # Navegación superior + modales de perfil y contraseña
+│   ├── Navbar.tsx                  # Navegación superior + modales de perfil y contraseña
+│   └── Footer.tsx
 │
-├── pages/
-│   ├── auth/               # LoginPage, RegisterPage
-│   ├── clients/            # ClientsPage
-│   ├── dashboard/          # DashboardPage (router), Admin/Agent/ClientDashboard
-│   ├── estadisticas/       # EstadisticasPage
-│   ├── reportes/           # ReportesPage
-│   ├── sucesos/            # SucesosPage
-│   ├── tickets/            # TicketDetailPage
-│   └── users/              # UsersPage
+├── router/
+│   ├── index.tsx                   # Enrutador raíz
+│   ├── AdminRoutes.tsx             # Rutas protegidas de administrador
+│   ├── AuthRoutes.tsx              # Rutas de autenticación
+│   ├── DashboardRoutes.tsx         # Rutas del dashboard
+│   └── PrivateRoute.tsx            # HOC de protección de rutas
+│
+├── services/
+│   ├── campus.service.ts           # Servicio global de campus
+│   ├── departments.service.ts      # Servicio global de departamentos
+│   └── roles.service.ts            # Servicio global de roles
+│
+├── styles/
+│   ├── index.css                   # Variables CSS y reset global
+│   └── App.css
 │
 ├── types/
-│   └── users.types.ts      # Interfaces TypeScript compartidas
+│   ├── campus.types.ts
+│   ├── components.types.ts         # Interfaces compartidas de componentes
+│   ├── departments.types.ts
+│   ├── roles.types.ts
+│   ├── users.types.ts
+│   └── index.ts
 │
-├── App.tsx                 # Definición de rutas
-├── main.tsx                # Punto de entrada de React
-└── styles/
-    └── index.css           # Variables CSS y reset global
+├── App.tsx                         # Definición de rutas principal
+└── main.tsx                        # Punto de entrada de React
 ```
 
 ---
@@ -195,7 +252,9 @@ El rol se determina en el inicio de sesión y se almacena en el contexto de aute
 
 ## Decisiones de diseño
 
+- **Arquitectura feature-based** — cada módulo de negocio (`auth`, `clients`, `tickets`, etc.) agrupa sus propias páginas, componentes, servicios, tipos y estilos. Esto mantiene la cohesión dentro de cada feature y minimiza el acoplamiento entre módulos.
 - **Sin librería de componentes externa** — todos los componentes están construidos desde cero utilizando estilos en línea y variables CSS, garantizando control total sobre el tema y el layout sin dependencias adicionales.
 - **Variables CSS para el tema** — variables como `--bg-card`, `--text-primary` y `--border` se definen globalmente y se consumen en línea, permitiendo el cambio entre modo claro y oscuro con un simple toggle de clase.
-- **Modales co-localizados** — los componentes modales (edición, creación, cambio de contraseña) viven en el mismo archivo que la página que los gestiona, reduciendo la complejidad de importaciones y manteniendo la lógica relacionada junta.
+- **Componentes UI compartidos en `components/ui/`** — los elementos reutilizables entre features (Modal, Table, Pagination, Select) se centralizan aquí, evitando duplicación sin romper el encapsulamiento por feature.
+- **Router modularizado** — las rutas están separadas por contexto (`AdminRoutes`, `AuthRoutes`, `DashboardRoutes`) en lugar de concentrarse en `App.tsx`, facilitando el mantenimiento a medida que crece el número de rutas.
 - **Context API en lugar de Redux** — dado el alcance de la aplicación, Context API con `useState` ofrece la gestión de estado necesaria sin el boilerplate de una librería dedicada.
