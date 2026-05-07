@@ -45,3 +45,25 @@ export interface CreateUserForm {
   email: string;
   phone: string;
 }
+
+// ── Create User Modal ─────────────────────────────────────────────────────────
+
+export interface CreateUserModalProps {
+  onClose: () => void;
+  onSave: (form: CreateUserForm) => void;
+}
+
+// ── Edit User Modal ───────────────────────────────────────────────────────────
+
+export interface EditUserForm {
+  name:   string;
+  email:  string;
+  phone:  string;
+  client: string;
+}
+
+export interface EditUserModalProps {
+  user:    User;
+  onClose: () => void;
+  onSave:  (id: number, form: EditUserForm) => void;
+}

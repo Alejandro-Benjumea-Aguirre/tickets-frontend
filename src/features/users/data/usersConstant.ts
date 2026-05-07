@@ -1,4 +1,44 @@
-import { User } from '../types/users.types';
+import { CreateUserForm, User, UserFilters } from '../types/users.types';
+
+
+// ── Mock data ──────────────────────────────────────────────────────────────────
+
+export const CLIENTES_OPTIONS = [
+  { value: 'abc',  label: 'Empresa ABC' },
+  { value: 'tech', label: 'Tech Solutions' },
+  { value: 'glob', label: 'Global Corp' },
+  { value: 'cons', label: 'Constructora XY' },
+  { value: 'fin',  label: 'Finanzas SA' },
+];
+
+export const ROLES_OPTIONS = [
+  { value: '1', label: 'Administrador' },
+  { value: '2', label: 'Agente' },
+  { value: '3', label: 'Cliente' },
+];
+
+export const EMPTY_FILTERS: UserFilters = {
+  name:       '',
+  rol_id:     '',
+  fechaDesde: '',
+  fechaHasta: '',
+  status:     '',
+};
+
+export const EMPTY_FORM: CreateUserForm = {
+  name:     '',
+  client:   '',
+  rol_id:   '',
+  password: '',
+  email:    '',
+  phone:    '',
+};
+
+export const roleColors: Record<number, { bg: string; color: string }> = {
+  1: { bg: '#E1F5EE', color: '#0F6E56' },
+  2: { bg: '#E6F1FB', color: '#185FA5' },
+  3: { bg: '#F5F0FF', color: '#6B3FA0' },
+};
 
 export const MOCK_USERS: User[] = [
   {

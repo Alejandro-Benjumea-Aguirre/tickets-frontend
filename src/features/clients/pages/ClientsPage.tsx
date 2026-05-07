@@ -17,7 +17,7 @@ import { EditClientModal } from '../components/EditClientModal';
 const ClientsPage = () => {
   const authContext = useContext(AuthContext);
   const {
-    clients, totalCount, filters, setFilter, clearFilters,
+    clients, filters, setFilter, clearFilters,
     showModal, setShowModal, editClient, setEditClient,
     handleToggleStatus, handleSave, handleEditSave, hasActiveFilters
   } = useClients();
