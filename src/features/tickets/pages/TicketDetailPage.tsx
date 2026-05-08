@@ -2,7 +2,8 @@ import { useState, useContext, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../auth/context/AuthContext';
 import { Navbar } from '../../../layouts/Navbar';
-import { TICKETS_DETAIL, TicketComment, TicketFile } from '../types/tickets.types';
+import { TicketComment, TicketFile } from '../types/tickets.types';
+import { TICKETS_DETAIL } from '../data/ticketConstants';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 

@@ -1,119 +1,28 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { AuthContext } from '../../auth/context/AuthContext';
 import { Navbar } from '../../../layouts/Navbar';
-import { getUsers, setUser, updateUser, updateStatus } from '../services/userService'
-import { User, UserFilters, CreateUserForm, EditUserForm } from '../types/users.types';
-import { MOCK_USERS, ROLES_OPTIONS, EMPTY_FILTERS, roleColors } from '../data/usersConstant';
-import Swal from 'sweetalert2';
+import { ROLES_OPTIONS, roleColors } from '../data/usersConstant';
 import { s } from '../styles/UserPage.style';
-import { applyFilters } from '../utils/userUtils';
+import { applyFilters, getInitials, getAvatarColor } from '../utils/userUtils';
+import { useUsers } from '../hooks/useUsers';
 import { CreateUserModal } from '../components/CreateUserModal';
 import { EditUserModal } from '../components/EditUserModal';
-
-const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
-
-
 
 // ── Users Page ────────────────────────────────────────────────────────────────
 
 const UsersPage = () => {
-  const authContext               = useContext(AuthContext);
-  const [filters, setFilters]     = useState<UserFilters>(EMPTY_FILTERS);
-  const [showModal, setShowModal] = useState(false);
-  const [users, setUsers]         = useState<User[]>([]);
-  const [editUser, setEditUser]   = useState<User | null>(null);
+  const authContext = useContext(AuthContext);
 
-  const fetchUsers = async (): Promise<void> => {
-    if (USE_MOCK) {
-      setUsers(MOCK_USERS);
-      return;
-    }
-    try {
-      const data = await getUsers();
-      setUsers(data.data.body ?? []);
-    } catch {
-      Swal.fire({ title: 'Error', text: 'No se pudieron cargar los usuarios.', icon: 'error', confirmButtonColor: '#1D9E75' });
-    }
-  }
-
-  useEffect(() => {
-    fetchUsers()
-  }, [])
+  const {
+    users, filters, showModal, editUser, hasActiveFilters,
+    setFilter, setShowModal, setEditUser,
+    handleToggleStatus, handleEditSave, handleSave, clearFilters
+  } = useUsers();
 
   if (!authContext) return <div>Error: AuthContext no está disponible</div>;
   const { user, logoutUser } = authContext;
 
   const filtered = applyFilters(users, filters);
-
-  const setFilter = (key: keyof UserFilters, value: string) =>
-    setFilters((prev) => ({ ...prev, [key]: value }));
-
-  const hasActiveFilters = Object.values(filters).some((v) => v !== '');
-
-  const handleToggleStatus = async (id: number, currentStatus: string | undefined) => {
-    if (USE_MOCK) {
-      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, status: currentStatus === 'active' ? 'inactive' : 'active' } : u));
-      return;
-    }
-    const newStatusId = currentStatus === 'active' ? 2 : 1;
-    try {
-      await updateStatus(id, newStatusId);
-      await fetchUsers();
-    } catch {
-      Swal.fire({ title: 'Error', text: 'No se pudo cambiar el estado del usuario.', icon: 'error', confirmButtonColor: '#1D9E75' });
-    }
-  };
-
-  const handleEditSave = async (id: number, form: EditUserForm) => {
-    if (USE_MOCK) {
-      setUsers((prev) => prev.map((u) => u.id === id ? { ...u, ...form } : u));
-      setEditUser(null);
-      return;
-    }
-    try {
-      const target = users.find((u) => u.id === id);
-      if (!target) return;
-      await updateUser(id, { ...target, name: form.name, email: form.email, phone: form.phone, client: form.client });
-      await fetchUsers();
-      setEditUser(null);
-    } catch {
-      Swal.fire({ title: 'Error', text: 'No se pudo guardar los cambios.', icon: 'error', confirmButtonColor: '#1D9E75' });
-    }
-  };
-
-  const handleSave = async (form: CreateUserForm) => {
-    const newUser: User = {
-      id:         USE_MOCK ? (users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1) : 0,
-      name:       form.name,
-      username:   form.name.split(' ').map((w) => w[0]).join('').toLowerCase(),
-      email:      form.email,
-      phone:      form.phone,
-      rol_id:     Number(form.rol_id),
-      rol:        ({ '1': 'Administrador', '2': 'Agente', '3': 'Cliente' } as Record<string, string>)[form.rol_id] ?? '',
-      client:     form.client,
-      password:   form.password,
-      status:     'active',
-      created_at: new Date().toISOString().slice(0, 10),
-    };
-    if (USE_MOCK) {
-      setUsers((prev) => [newUser, ...prev]);
-      setShowModal(false);
-      return;
-    }
-    try {
-      await setUser(newUser);
-      await fetchUsers();
-      setShowModal(false);
-    } catch {
-      Swal.fire({ title: 'Error', text: 'No se pudo crear el usuario.', icon: 'error', confirmButtonColor: '#1D9E75' });
-    }
-  };
-
-  const initials = (name: string) =>
-    name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
-
-  const avatarColor = (rol_id: number) =>
-    ({ 1: '#1D9E75', 2: '#378ADD', 3: '#7C5CBF' }[rol_id] ?? '#888');
 
   return (
     <>
@@ -199,7 +108,7 @@ const UsersPage = () => {
             <div style={{ ...s.filterField, justifyContent: 'flex-end' }}>
               <label style={{ ...s.filterLabel, visibility: 'hidden' }}>·</label>
               {hasActiveFilters ? (
-                <button style={s.clearBtn} onClick={() => setFilters(EMPTY_FILTERS)}>
+                <button style={s.clearBtn} onClick={clearFilters}> {/* ← sin setFilters directo */}
                   <svg viewBox="0 0 24 24" width={12} height={12} fill="none" stroke="currentColor" strokeWidth={2.5}>
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
@@ -251,8 +160,8 @@ const UsersPage = () => {
                       {/* Usuario */}
                       <td style={s.td}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ ...s.avatar, background: avatarColor(u.rol_id) }}>
-                            {initials(u.name)}
+                          <div style={{ ...s.avatar, background: getAvatarColor(u.rol_id) }}>
+                            {getInitials(u.name)}
                           </div>
                           <div>
                             <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{u.name}</div>
