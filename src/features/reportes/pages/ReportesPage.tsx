@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { ModuleKey } from '../types/reportes.types';
 import { s } from '../styles/ReportePage.style';
 import { CLIENTES, ESTADO_MAP, LEVEL_COLORS, MODULE_CONFIGS, PRIO_COLORS, SUCESOS, TICKETS, USUARIOS } from '../data/ReportesConstant';

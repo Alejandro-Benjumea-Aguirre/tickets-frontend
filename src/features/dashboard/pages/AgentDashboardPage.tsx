@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { myTickets, agenteKpis, lineData, lineOptions, donutItems, donutData, donutOptions } from '../data/dashboardConstant';
 import { s } from '../styles/DashboardPage.styles';
 import { TicketsTable } from '../../tickets/components/TicketsTable';

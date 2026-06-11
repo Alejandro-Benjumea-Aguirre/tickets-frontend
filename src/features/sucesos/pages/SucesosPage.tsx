@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { MOCK_SUCESOS, LEVEL_LABELS, LEVEL_COLORS, LEVEL_DOT, EMPTY_FILTERS } from '../data/sucesosConstant';
 import { Suceso, SucesoFilters, CreateSucesoForm } from '../types/sucesos.types';
 import { s } from '../styles/SucesosPage.style';

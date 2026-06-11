@@ -11,7 +11,7 @@ import { TicketsTable } from '../../tickets/components/TicketsTable';
 import { AuthContext } from '../../auth/context/AuthContext';
 
 // Componentes Globales / Layouts
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 
 // Recursos propios de esta Feature (Dashboard)
 import { lineData, adminKpis, allTickets, lineOptions, donutItems, donutData, donutOptions } from '../data/dashboardConstant';

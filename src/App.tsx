@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // 1. Importar el proveedor global de Toasts
 import { AuthProvider } from './features/auth/context/AuthContext';
 import { ThemeProvider } from './features/theme/ThemeContext';
 import LoginPage from './features/auth/pages/LoginPage';
@@ -16,6 +17,21 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+
+        <Toaster 
+          position="bottom-right"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 4500,
+            style: {
+              background: '#ffffff',
+              color: '#0f172a',
+              borderRadius: '12px',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+            },
+          }}
+        />
+
         <Router>
           <Routes>
             <Route path="/login" element={<LoginPage />} />

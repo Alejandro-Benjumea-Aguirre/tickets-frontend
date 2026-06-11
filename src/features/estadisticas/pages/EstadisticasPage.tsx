@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { DataSets, Entity, Period, ChartType } from '../types/estadisticas.types';
 import { s } from '../styles/EstadisticasPage.style';
 import { AGENT_DATA, AGENTS, CLIENTS, LABELS, TOTALS, CLIENT_DATA, PERIOD_OPTS, CHART_OPTS } from '../data/estadisticasConstant';

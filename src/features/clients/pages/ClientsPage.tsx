@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { s } from '../styles/ClientsPage.style';
 
 // Hooks y Utils

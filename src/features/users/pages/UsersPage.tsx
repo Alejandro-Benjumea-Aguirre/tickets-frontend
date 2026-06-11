@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { ROLES_OPTIONS, roleColors } from '../data/usersConstant';
 import { s } from '../styles/UserPage.style';
 import { applyFilters, getInitials, getAvatarColor } from '../utils/userUtils';

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import CreateTicketModal from '../../tickets/components/CreateTicketModal';
 import { AuthContext } from '../../auth/context/AuthContext';
-import { Navbar } from '../../../layouts/Navbar';
+import { Navbar } from '../../../layouts/Navbar/pages/Navbar';
 import { clientKpis, myTickets } from '../data/dashboardConstant';
 import { TicketsTable } from '../../tickets/components/TicketsTable';
 import { s } from '../styles/DashboardPage.styles';
