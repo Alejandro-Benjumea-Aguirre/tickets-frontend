@@ -28,8 +28,9 @@ const RegisterPage = () => {
         const responseRoles = await getRoles();
         setOptionsRoles((responseRoles.data.body ?? []).map((r) => ({ value: r.id, label: r.name })));
 
-        const responseDepartments = await getDepartments();
-        setOptionsDepartments((responseDepartments.data.body ?? []).map((d) => ({ value: d.id, label: d.name })));
+      const responseDepartments = await getDepartments();
+      const departmentsData = Array.isArray(responseDepartments.data.body) ? responseDepartments.data.body : [];
+      setOptionsDepartments(departmentsData.map((d: any) => ({ value: d.id, label: d.name })));
 
         const responseCampus = await getAllCampus();
         setOptionsCampus((responseCampus.data.body ?? []).map((c) => ({ value: c.id, label: c.name })));

@@ -1,7 +1,6 @@
 import { ReactNode } from "react"
 
 export interface User {
-  id: number
   username: string
   name: string
   email: string
@@ -14,7 +13,6 @@ export interface User {
   password?: string
   phone?: string
   client?: string
-  created_at: string
 }
 
 export interface AuthContextType {
